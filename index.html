@@ -6,6 +6,7 @@
   <title>Sydney Thompson</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
   <style>
     body { font-family: 'Segoe UI', sans-serif; color: #333; }
     .hero {
@@ -14,17 +15,17 @@
       padding: 100px 0 80px;
     }
     .hero h1 { font-size: 3rem; font-weight: 700; letter-spacing: 1px; }
-    .hero p { font-size: 1.2rem; opacity: 0.9; }
+    .hero p { font-size: 1.1rem; opacity: 0.9; }
+    .hero hr { border-color: rgba(255,255,255,0.4); width: 200px; margin: 12px auto; }
     .nav-link { color: white !important; font-weight: 500; }
     .navbar { background-color: #1a3c5e !important; }
     .navbar-brand { color: white !important; font-weight: 700; font-size: 1.3rem; }
     .section-title { color: #1a3c5e; font-weight: 700; border-bottom: 3px solid #2d6a9f; padding-bottom: 8px; margin-bottom: 30px; }
-    .card { border: none; box-shadow: 0 2px 15px rgba(0,0,0,0.08); border-radius: 12px; }
-    .badge-skill { background-color: #e8f1fa; color: #1a3c5e; border-radius: 20px; padding: 6px 16px; font-size: 0.9rem; display: inline-block; margin: 4px; }
+    .profile-img { width: 280px; height: 340px; object-fit: cover; object-position: top; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
     footer { background-color: #1a3c5e; color: #ccc; padding: 30px 0; }
     footer a { color: #8fc3f0; text-decoration: none; }
-    .btn-primary-custom { background-color: #2d6a9f; border: none; color: white; padding: 10px 28px; border-radius: 25px; font-weight: 600; }
-    .btn-primary-custom:hover { background-color: #1a3c5e; color: white; }
+    .social-icon { font-size: 1.8rem; color: #8fc3f0; margin: 0 10px; text-decoration: none; transition: color 0.2s; }
+    .social-icon:hover { color: white; }
   </style>
 </head>
 <body>
@@ -40,7 +41,6 @@
       <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="resume.html">Résumé</a></li>
-        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
       </ul>
     </div>
   </div>
@@ -50,9 +50,9 @@
 <section class="hero text-center">
   <div class="container">
     <h1>Sydney Thompson</h1>
-    <p class="mb-4">HR Management Student &bull; BYU Marriott School of Business &bull; Class of 2028</p>
-    <a href="resume.html" class="btn btn-primary-custom me-2">View Résumé</a>
-    <a href="contact.html" class="btn btn-outline-light">Contact Me</a>
+    <p class="mb-2">HR Management Student &bull; BYU Marriott School of Business &bull; Class of 2028</p>
+    <hr/>
+    <p class="mb-0">sydkthomp@gmail.com &nbsp;&nbsp;|&nbsp;&nbsp; 734-546-0113</p>
   </div>
 </section>
  
@@ -60,62 +60,15 @@
 <section class="py-5">
   <div class="container">
     <div class="row align-items-center">
-      <div class="col-md-6 mb-4 mb-md-0">
+      <div class="col-md-8 mb-4 mb-md-0">
         <h2 class="section-title">About Me</h2>
-        <p>I'm a sophomore at Brigham Young University hoping to study Human Resource Management at the Marriott School of Business. I'm passionate about people, leadership, and building strong teams and organizations.</p>
+        <p>I'm a sophomore at Brigham Young University studying Human Resource Management at the Marriott School of Business. I'm passionate about people, leadership, and building strong teams and organizations.</p>
         <p>I recently returned from serving as a Proselytizing Missionary and Sister Training Leader in Cancún, Mexico — an experience that deepened my cross-cultural communication skills, leadership abilities, and Spanish fluency.</p>
         <p>I'm eager to bring my enthusiasm for relationship-building and people management into the HR field as I continue my education.</p>
       </div>
-      <div class="col-md-6">
-        <div class="row g-3">
-          <div class="col-6">
-            <div class="card p-4 text-center">
-              <div style="font-size:2rem; color:#2d6a9f;">&#127891;</div>
-              <h6 class="mt-2 fw-bold">Education</h6>
-              <small class="text-muted">BYU Marriott School of Business — GPA 3.56</small>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="card p-4 text-center">
-              <div style="font-size:2rem; color:#2d6a9f;">&#127760;</div>
-              <h6 class="mt-2 fw-bold">Bilingual</h6>
-              <small class="text-muted">Fluent in Spanish &amp; English</small>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="card p-4 text-center">
-              <div style="font-size:2rem; color:#2d6a9f;">&#128101;</div>
-              <h6 class="mt-2 fw-bold">Leadership</h6>
-              <small class="text-muted">Sister Training Leader, Cheer Captain</small>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="card p-4 text-center">
-              <div style="font-size:2rem; color:#2d6a9f;">&#128200;</div>
-              <h6 class="mt-2 fw-bold">HR Focus</h6>
-              <small class="text-muted">People, teams &amp; organizational culture</small>
-            </div>
-          </div>
-        </div>
+      <div class="col-md-4 text-center">
+        <img src="IMG_5038.jpg" alt="Sydney Thompson" class="profile-img"/>
       </div>
-    </div>
-  </div>
-</section>
- 
-<!-- Skills -->
-<section class="py-5" style="background:#f8f9fa;">
-  <div class="container">
-    <h2 class="section-title">Skills</h2>
-    <div>
-      <span class="badge-skill">Fluent in Spanish</span>
-      <span class="badge-skill">Creativity &amp; Innovation</span>
-      <span class="badge-skill">Critical Thinking</span>
-      <span class="badge-skill">Active Listening</span>
-      <span class="badge-skill">Analyzing Sales Data</span>
-      <span class="badge-skill">Relationship Building</span>
-      <span class="badge-skill">Cross-Cultural Communication</span>
-      <span class="badge-skill">Team Leadership</span>
-      <span class="badge-skill">Mentoring</span>
     </div>
   </div>
 </section>
@@ -124,7 +77,13 @@
 <footer class="text-center">
   <div class="container">
     <p class="mb-1">Sydney Thompson &mdash; BYU Marriott School of Business</p>
-    <p><a href="mailto:sydkthomp@gmail.com"><i class="bi bi-envelope"></i> sydkthomp@gmail.com</a></p>
+    <p class="mb-3"><a href="mailto:sydkthomp@gmail.com">sydkthomp@gmail.com</a></p>
+    <a href="https://www.instagram.com/sydkthomp/" target="_blank" class="social-icon">
+      <i class="fa-brands fa-instagram"></i>
+    </a>
+    <a href="https://www.facebook.com/sydney.thompson.457152/" target="_blank" class="social-icon">
+      <i class="fa-brands fa-facebook"></i>
+    </a>
   </div>
 </footer>
  
