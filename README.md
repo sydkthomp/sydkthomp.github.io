@@ -1,1 +1,0 @@
-# sydkthomp.github.io
