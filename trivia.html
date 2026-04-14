@@ -37,14 +37,25 @@
             text-align: center;
         }
 
-        .landmark-img {
+        /* Image handling with a gray fallback if link fails */
+        .image-box {
             width: 100%;
             height: 250px;
-            object-fit: cover;
+            background-color: #e9ecef;
             border-radius: 15px;
             margin-bottom: 1rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            background-color: #eee;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .landmark-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s;
         }
 
         .options-grid {
@@ -70,61 +81,20 @@
             background: #f0fdfa;
         }
 
-        button.correct {
-            background-color: var(--success) !important;
-            color: white;
-            border-color: var(--success);
-        }
-
-        button.wrong {
-            background-color: var(--error) !important;
-            color: white;
-            border-color: var(--error);
-        }
+        button.correct { background-color: var(--success) !important; color: white; border-color: var(--success); }
+        button.wrong { background-color: var(--error) !important; color: white; border-color: var(--error); }
 
         #progress-container {
-            width: 100%;
-            height: 8px;
-            background: #eee;
-            border-radius: 10px;
-            margin: 20px 0;
-            overflow: hidden;
+            width: 100%; height: 8px; background: #eee; border-radius: 10px; margin: 20px 0; overflow: hidden;
         }
 
-        #progress-bar {
-            width: 0%;
-            height: 100%;
-            background: var(--primary);
-            transition: width 0.3s;
-        }
+        #progress-bar { width: 0%; height: 100%; background: var(--primary); transition: width 0.3s; }
 
-        #hint-text {
-            font-style: italic;
-            color: var(--accent);
-            height: 20px;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-        }
+        #hint-text { font-style: italic; color: var(--accent); height: 20px; margin-bottom: 10px; font-size: 0.9rem; }
 
         .hidden { display: none; }
-        
-        h2 { margin: 10px 0; font-size: 1.2rem; color: var(--secondary); }
-        
-        .nav-btn {
-            background: var(--primary);
-            color: white;
-            width: 100%;
-            border: none;
-            margin-top: 10px;
-        }
-
-        .hint-btn {
-            background: #f8f9fa;
-            border: 1px dashed #ccc;
-            font-size: 0.8rem;
-            margin-top: 10px;
-            width: 50%;
-        }
+        .nav-btn { background: var(--primary); color: white; width: 100%; border: none; margin-top: 10px; }
+        .hint-btn { background: #f8f9fa; border: 1px dashed #ccc; font-size: 0.8rem; margin-top: 10px; width: 50%; }
     </style>
 </head>
 <body>
@@ -139,7 +109,9 @@
         <div id="quiz-screen" class="hidden">
             <div id="progress-container"><div id="progress-bar"></div></div>
             <p>Question <span id="q-num">1</span> of 10</p>
-            <img id="landmark-photo" class="landmark-img" src="" alt="Landmark">
+            <div class="image-box">
+                <img id="landmark-photo" class="landmark-img" src="" alt="Landmark" onerror="this.style.opacity='0'; document.getElementById('hint-button').click();">
+            </div>
             <div id="hint-text"></div>
             <h2>Which country is this?</h2>
             <div class="options-grid" id="options"></div>
@@ -155,19 +127,18 @@
     </div>
 
     <script>
+        // Updated with the most reliable high-resolution links available
         const triviaData = [
-            // Fixed First Photo (India)
-            { img: "https://images.unsplash.com/photo-1548013146-72479768bbaa?auto=format&fit=crop&w=600&q=80", country: "India", landmark: "The Taj Mahal" },
-            { img: "https://images.unsplash.com/photo-1503917988258-f87a78e3c995?w=600", country: "France", landmark: "The Eiffel Tower" },
-            { img: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=600", country: "Italy", landmark: "The Colosseum" },
-            { img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600", country: "Japan", landmark: "Mount Fuji" },
-            { img: "https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=600", country: "Egypt", landmark: "The Great Pyramids" },
-            { img: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=600", country: "Italy", landmark: "The Canals of Venice" },
-            { img: "https://images.unsplash.com/photo-1529655683826-aba9b3e77383?w=600", country: "United Kingdom", landmark: "Big Ben" },
-            { img: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=600", country: "China", landmark: "The Great Wall" },
-            // Fixed Ninth Photo (Peru)
-            { img: "https://images.unsplash.com/photo-1526392060635-9d6019884377?auto=format&fit=crop&w=600&q=80", country: "Peru", landmark: "Machu Picchu" },
-            { img: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=600", country: "Australia", landmark: "The Sydney Opera House" }
+            { img: "https://www.worldatlas.com/upload/bb/94/e7/shutterstock-180423581.jpg", country: "India", landmark: "The Taj Mahal" },
+            { img: "https://www.worldatlas.com/upload/ce/90/73/shutterstock-102553753.jpg", country: "France", landmark: "The Eiffel Tower" },
+            { img: "https://www.worldatlas.com/upload/05/92/7d/shutterstock-574229443.jpg", country: "Italy", landmark: "The Colosseum" },
+            { img: "https://www.worldatlas.com/upload/0a/61/88/shutterstock-615652160.jpg", country: "Japan", landmark: "Mount Fuji" },
+            { img: "https://www.worldatlas.com/upload/94/2c/3a/shutterstock-111005822.jpg", country: "Egypt", landmark: "The Great Pyramids" },
+            { img: "https://www.worldatlas.com/upload/c2/85/33/shutterstock-521914102.jpg", country: "Italy", landmark: "The Canals of Venice" },
+            { img: "https://www.worldatlas.com/upload/30/8a/85/shutterstock-115147048.jpg", country: "United Kingdom", landmark: "Big Ben" },
+            { img: "https://www.worldatlas.com/upload/90/a1/38/shutterstock-401736274.jpg", country: "China", landmark: "The Great Wall" },
+            { img: "https://www.worldatlas.com/upload/7a/61/89/shutterstock-258055661.jpg", country: "Peru", landmark: "Machu Picchu" },
+            { img: "https://www.worldatlas.com/upload/a9/37/10/shutterstock-126207551.jpg", country: "Australia", landmark: "The Sydney Opera House" }
         ];
 
         const allCountries = ["Brazil", "Canada", "Germany", "Mexico", "Thailand", "Greece", "USA", "Spain", "South Africa", "Turkey", "Vietnam", "Norway", "Chile", "Morocco"];
@@ -185,11 +156,14 @@
         function showQuestion() {
             canAnswer = true;
             const data = triviaData[currentQuestion];
-            document.getElementById('landmark-photo').src = data.img;
+            const imgElement = document.getElementById('landmark-photo');
+            
+            imgElement.style.opacity = '1';
+            imgElement.src = data.img;
+            
             document.getElementById('q-num').innerText = currentQuestion + 1;
             document.getElementById('hint-text').innerText = "";
             document.getElementById('hint-button').classList.remove('hidden');
-            
             document.getElementById('progress-bar').style.width = ((currentQuestion) / triviaData.length) * 100 + "%";
 
             let options = [data.country];
@@ -210,7 +184,7 @@
         }
 
         function showHint() {
-            document.getElementById('hint-text').innerText = "Hint: " + triviaData[currentQuestion].landmark;
+            document.getElementById('hint-text').innerText = "Clue: " + triviaData[currentQuestion].landmark;
             document.getElementById('hint-button').classList.add('hidden');
         }
 
@@ -246,10 +220,7 @@
             document.getElementById('result-screen').classList.remove('hidden');
             document.getElementById('final-score').innerText = score;
             
-            let msg = "";
-            if(score === 10) msg = "Grand Explorer! You know the world perfectly.";
-            else if(score > 7) msg = "Seasoned Traveler! Great job.";
-            else msg = "Time to book a flight and explore more!";
+            let msg = score >= 8 ? "Grand Explorer! You're ready for takeoff!" : "Time to study the map and try again!";
             document.getElementById('rank-msg').innerText = msg;
         }
     </script>
