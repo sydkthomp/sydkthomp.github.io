@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travel Trivia Game</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 700px;
+  margin: 50px auto;
+  background: rgba(0,0,0,0.3);
+  padding: 25px;
+  border-radius: 15px;
+}
+
+h1 {
+  margin-bottom: 10px;
+}
+
+img {
+  width: 100%;
+  max-height: 350px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin: 15px 0;
+}
+
+button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+.correct {
+  background-color: #4CAF50;
+}
+
+.wrong {
+  background-color: #e74c3c;
+}
+
+.option {
+  background-color: white;
+  color: black;
+}
+
+#nextBtn {
+  margin-top: 15px;
+  background-color: #ff7a18;
+  color: white;
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>🌍 Travel Trivia</h1>
+  <p id="question">Where is this place?</p>
+
+  <img id="image" src="" alt="Travel Image">
+
+  <div id="answers"></div>
+
+  <button id="nextBtn" onclick="nextQuestion()">Next Question</button>
+
+  <h3 id="score"></h3>
+</div>
+
+<script>
+const questions = [
+  {
+    image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34",
+    correct: "France",
+    options: ["Italy", "France", "Spain", "Germany"]
+  },
+  {
+    image: "https://images.unsplash.com/photo-1467269204594-9661b134dd2b",
+    correct: "Japan",
+    options: ["China", "Japan", "Thailand", "South Korea"]
+  },
+  {
+    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c",
+    correct: "USA",
+    options: ["Canada", "USA", "UK", "Australia"]
+  },
+  {
+    image: "https://images.unsplash.com/photo-1506976785307-8732e854ad03",
+    correct: "Brazil",
+    options: ["Mexico", "Brazil", "Argentina", "Spain"]
+  }
+];
+
+let current = 0;
+let score = 0;
+
+function loadQuestion() {
+  const q = questions[current];
+  document.getElementById("image").src = q.image;
+  const answersDiv = document.getElementById("answers");
+  answersDiv.innerHTML = "";
+  document.getElementById("nextBtn").style.display = "none";
+
+  q.options.forEach(option => {
+    const btn = document.createElement("button");
+    btn.innerText = option;
+    btn.classList.add("option");
+    btn.onclick = () => checkAnswer(btn, option);
+    answersDiv.appendChild(btn);
+  });
+}
+
+function checkAnswer(button, answer) {
+  const correctAnswer = questions[current].correct;
+  const buttons = document.querySelectorAll(".option");
+
+  buttons.forEach(btn => btn.disabled = true);
+
+  if (answer === correctAnswer) {
+    button.classList.add("correct");
+    score++;
+  } else {
+    button.classList.add("wrong");
+    buttons.forEach(btn => {
+      if (btn.innerText === correctAnswer) {
+        btn.classList.add("correct");
+      }
+    });
+  }
+
+  document.getElementById("nextBtn").style.display = "block";
+}
+
+function nextQuestion() {
+  current++;
+  if (current < questions.length) {
+    loadQuestion();
+  } else {
+    document.querySelector(".container").innerHTML =
+      `<h1>🎉 Game Over!</h1>
+       <h2>Your Score: ${score}/${questions.length}</h2>
+       <button onclick="location.reload()">Play Again</button>`;
+  }
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
