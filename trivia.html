@@ -1,181 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Travel Trivia Kahoot</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Explorer: Travel Trivia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2a9d8f;
+            --secondary: #264653;
+            --accent: #e76f51;
+            --light: #f4f1de;
+            --success: #8ab17d;
+            --error: #e63946;
+        }
 
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #121212;
-  color: white;
-  text-align: center;
-}
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--secondary);
+            color: var(--light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
 
-.container {
-  max-width: 900px;
-  margin: auto;
-  padding: 20px;
-}
+        #game-container {
+            background: white;
+            color: #333;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
 
-h1 {
-  margin-bottom: 10px;
-}
+        .landmark-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
 
-img {
-  width: 100%;
-  max-height: 400px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin: 15px 0;
-}
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
 
-/* Kahoot-style answers */
-.answers {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
+        button {
+            padding: 12px;
+            border: 2px solid #eee;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
 
-.answer-btn {
-  padding: 20px;
-  font-size: 1.2rem;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  color: white;
-  font-weight: bold;
-}
+        button:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: #f0fdfa;
+        }
 
-.red { background: #e74c3c; }
-.blue { background: #3498db; }
-.yellow { background: #f1c40f; color: black; }
-.green { background: #2ecc71; }
+        button.correct {
+            background-color: var(--success) !important;
+            color: white;
+            border-color: var(--success);
+        }
 
-.correct {
-  outline: 4px solid #00ffcc;
-}
+        button.wrong {
+            background-color: var(--error) !important;
+            color: white;
+            border-color: var(--error);
+        }
 
-.wrong {
-  opacity: 0.4;
-}
+        #progress-container {
+            width: 100%;
+            height: 8px;
+            background: #eee;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
 
-#nextBtn {
-  margin-top: 20px;
-  padding: 12px 25px;
-  font-size: 1.1rem;
-  border: none;
-  border-radius: 10px;
-  background: #ff7a18;
-  color: white;
-  cursor: pointer;
-  display: none;
-}
-</style>
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .hidden { display: none; }
+        
+        h2 { margin-top: 0; font-size: 1.2rem; color: var(--secondary); }
+        
+        #score-display { font-weight: bold; color: var(--accent); }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
-  <h1>🌍 Travel Trivia Kahoot</h1>
-  <h3 id="score">Score: 0</h3>
+    <div id="game-container">
+        <div id="start-screen">
+            <h1>🌍 Global Explorer</h1>
+            <p>How well do you know our world? Identify the country from the landmark photo!</p>
+            <button onclick="startGame()" style="background: var(--primary); color: white; width: 100%; border: none;">Start Journey</button>
+        </div>
 
-  <img id="image" src="">
+        <div id="quiz-screen" class="hidden">
+            <div id="progress-container"><div id="progress-bar"></div></div>
+            <p>Question <span id="q-num">1</span> of 10</p>
+            <img id="landmark-photo" class="landmark-img" src="" alt="Landmark">
+            <h2>Which country is this?</h2>
+            <div class="options-grid" id="options">
+                </div>
+        </div>
 
-  <div class="answers" id="answers"></div>
+        <div id="result-screen" class="hidden">
+            <h1>Adventure Complete!</h1>
+            <p>Your Final Score: <span id="final-score">0</span>/10</p>
+            <div id="rank-msg"></div>
+            <button onclick="location.reload()" style="background: var(--secondary); color: white; margin-top: 20px;">Play Again</button>
+        </div>
+    </div>
 
-  <button id="nextBtn" onclick="nextQuestion()">Next</button>
-</div>
+    <script>
+        const triviaData = [
+            { img: "https://images.unsplash.com/photo-1548013146-72479768bbaa?w=600", country: "India", landmark: "Taj Mahal" },
+            { img: "https://images.unsplash.com/photo-1503917988258-f87a78e3c995?w=600", country: "France", landmark: "Eiffel Tower" },
+            { img: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=600", country: "Italy", landmark: "Colosseum" },
+            { img: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600", country: "Japan", landmark: "Mount Fuji" },
+            { img: "https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=600", country: "Egypt", landmark: "Pyramids of Giza" },
+            { img: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=600", country: "Italy", landmark: "Venice" },
+            { img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600", country: "United Kingdom", landmark: "Big Ben" },
+            { img: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=600", country: "China", landmark: "Great Wall" },
+            { img: "https://images.unsplash.com/photo-1580619305218-8423a7ef79b4?w=600", country: "Peru", landmark: "Machu Picchu" },
+            { img: "https://images.unsplash.com/photo-1516483642775-8025e6e87364?w=600", country: "Australia", landmark: "Sydney Opera House" }
+        ];
 
-<script>
-const questions = [
-  {
-    image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34", // Eiffel Tower
-    correct: "France",
-    options: ["Italy", "France", "Spain", "Germany"]
-  },
-  {
-    image: "https://images.unsplash.com/photo-1549692520-acc6669e2f0c", // Tokyo street
-    correct: "Japan",
-    options: ["China", "Japan", "Thailand", "South Korea"]
-  },
-  {
-    image: "https://images.unsplash.com/photo-1505761671935-60b3a7427bad", // NYC skyline
-    correct: "United States",
-    options: ["Canada", "United States", "UK", "Australia"]
-  },
-  {
-    image: "https://images.unsplash.com/photo-1526481280691-9061c4a3b5a3", // Rio
-    correct: "Brazil",
-    options: ["Mexico", "Brazil", "Argentina", "Spain"]
-  },
-  {
-    image: "https://images.unsplash.com/photo-1533106418989-88406c7cc8ca", // Sydney Opera House
-    correct: "Australia",
-    options: ["New Zealand", "Australia", "USA", "Canada"]
-  }
-];
+        const allCountries = ["Brazil", "Canada", "Germany", "Mexico", "Thailand", "Greece", "USA", "Spain", "South Africa", "Turkey", "Vietnam", "Norway"];
 
-let current = 0;
-let score = 0;
+        let currentQuestion = 0;
+        let score = 0;
+        let canAnswer = true;
 
-const colors = ["red","blue","yellow","green"];
+        function startGame() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            showQuestion();
+        }
 
-function loadQuestion() {
-  const q = questions[current];
-  document.getElementById("image").src = q.image;
+        function showQuestion() {
+            canAnswer = true;
+            const data = triviaData[currentQuestion];
+            document.getElementById('landmark-photo').src = data.img;
+            document.getElementById('q-num').innerText = currentQuestion + 1;
+            
+            // Update Progress Bar
+            document.getElementById('progress-bar').style.width = ((currentQuestion) / triviaData.length) * 100 + "%";
 
-  const answersDiv = document.getElementById("answers");
-  answersDiv.innerHTML = "";
-  document.getElementById("nextBtn").style.display = "none";
+            // Generate options
+            let options = [data.country];
+            while(options.length < 4) {
+                let randomCountry = allCountries[Math.floor(Math.random() * allCountries.length)];
+                if(!options.includes(randomCountry)) options.push(randomCountry);
+            }
+            options.sort(() => Math.random() - 0.5);
 
-  q.options.forEach((option, index) => {
-    const btn = document.createElement("button");
-    btn.innerText = option;
-    btn.classList.add("answer-btn", colors[index]);
-    btn.onclick = () => checkAnswer(btn, option);
-    answersDiv.appendChild(btn);
-  });
-}
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
 
-function checkAnswer(button, answer) {
-  const correct = questions[current].correct;
-  const buttons = document.querySelectorAll(".answer-btn");
+        function checkAnswer(selected, btn) {
+            if (!canAnswer) return;
+            canAnswer = false;
 
-  buttons.forEach(btn => btn.disabled = true);
+            const correct = triviaData[currentQuestion].country;
+            const allBtns = document.querySelectorAll('#options button');
 
-  if (answer === correct) {
-    button.classList.add("correct");
-    score++;
-  } else {
-    button.classList.add("wrong");
-    buttons.forEach(btn => {
-      if (btn.innerText === correct) {
-        btn.classList.add("correct");
-      }
-    });
-  }
+            if (selected === correct) {
+                btn.classList.add('correct');
+                score++;
+            } else {
+                btn.classList.add('wrong');
+                // Highlight the correct one
+                allBtns.forEach(b => {
+                    if(b.innerText === correct) b.classList.add('correct');
+                });
+            }
 
-  document.getElementById("score").innerText = "Score: " + score;
-  document.getElementById("nextBtn").style.display = "block";
-}
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < triviaData.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            }, 1500);
+        }
 
-function nextQuestion() {
-  current++;
-  if (current < questions.length) {
-    loadQuestion();
-  } else {
-    document.querySelector(".container").innerHTML =
-      `<h1>🎉 Game Over!</h1>
-       <h2>Your Score: ${score}/${questions.length}</h2>
-       <button onclick="location.reload()">Play Again</button>`;
-  }
-}
-
-loadQuestion();
-</script>
-
+        function showResults() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            document.getElementById('final-score').innerText = score;
+            
+            let msg = "";
+            if(score === 10) msg = "Grand Explorer! You know the world perfectly.";
+            else if(score > 7) msg = "Seasoned Traveler! Great job.";
+            else msg = "Time to book a flight and explore more!";
+            document.getElementById('rank-msg').innerText = msg;
+        }
+    </script>
 </body>
 </html>
